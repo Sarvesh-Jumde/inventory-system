@@ -5,30 +5,42 @@ import {
   InvocationContext,
 } from "@azure/functions";
 import { connectToDatabase } from "../shared/mogodb";
-import { Product } from "../models/Product";
+import {
+  Product,
+  ProductSchema,
+  ProductInput,
+  ProductDbSchema,
+} from "../models/Product";
 
 export async function addProduct(
   request: HttpRequest,
   context: InvocationContext,
 ): Promise<HttpResponseInit> {
   try {
-    const body = (await request.json()) as Partial<Product>;
+    const body = await request.json();
 
-    // Simple Validation
-    if (!body.name || !body.sku || body.price === undefined) {
-      return { status: 400, body: "Missing required fields: name, sku, price" };
+    // valiadte the body using zod schema
+    const validation = ProductSchema.safeParse(body);
+
+    // If validation fails, return 400 with error message
+    if (!validation.success) {
+      return {
+        status: 400,
+        jsonBody: {
+          error: "Validation Failed",
+          details: validation.error.format(),
+        },
+      };
     }
+
+    // Extract the validated data
+    const ValidatedData = validation.data;
 
     const db = await connectToDatabase();
     const collection = db.collection<Product>("products");
 
     const newProduct: Product = {
-      name: body.name,
-      sku: body.sku,
-      price: body.price,
-      stockQuantity: body.stockQuantity || 0,
-      lowStockThreshold: body.lowStockThreshold || 5,
-      category: body.category || "General",
+      ...ValidatedData,
       updatedAt: new Date(),
     };
 
