@@ -48,3 +48,15 @@ __pycache__/
 __blobstorage__
 __queuestorage__
 __azurite_db*__.json
+
+# Azurite Local Storage (The files you're seeing)
+__azurite_db_blob__.json
+__azurite_db_table__.json
+__azurite_db_queue__.json
+__blobstorage__/
+__queuestorage__/
+__tablestorage__/
+
+# OS files
+.DS_Store
+Thumbs.db
