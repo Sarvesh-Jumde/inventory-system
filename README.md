@@ -45,34 +45,40 @@ The system is designed to be highly decoupled and scalable:
 
 ### 2. Environment Configuration
 
-Create a `local.settings.json` file in the root directory (this file is ignored by git):
+    Create a `local.settings.json` file in the root directory (this file is ignored by git):
 
-```json
 {
-  "IsEncrypted": false,
-  "Values": {
-    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
-    "FUNCTIONS_WORKER_RUNTIME": "node",
-    "MongoDBAtlasConnectionString": "YOUR_MONGODB_ATLAS_CONNECTION_STRING",
-    "DatabaseName": "inventory_db"
-  }
+"IsEncrypted": false,
+"Values": {
+"AzureWebJobsStorage": "UseDevelopmentStorage=true",
+"FUNCTIONS_WORKER_RUNTIME": "node",
+"MongoDBAtlasConnectionString": "YOUR_MONGODB_ATLAS_CONNECTION_STRING",
+"DatabaseName": "inventory_db"
+}
 }
 
 ### 3. Running the App
 
 # Install dependencies
+
 npm install
 
 # Compile TypeScript
+
 npm run build
 
 # Start the Functions host
+
 func start
 
 ### 4. Testing the Flow
+
 Add Product: POST /api/addProduct with a JSON body (name, sku, price, stockQuantity, lowStockThreshold).
 
 Trigger Alert: PATCH /api/updateStock and set the quantity below the threshold.
 
 Observe Logs: You will see updateStock finish instantly, followed by lowStockQueueTrigger processing the alert in the background.
+
+```
+
 ```
